@@ -22,8 +22,11 @@ export default async function handler(req, res) {
     const now = Math.floor(Date.now() / 1000);
     const payload = base64url(Buffer.from(JSON.stringify({
       iat: now,
-      exp: now + 300, // 5 minutos
+      exp: now + 300,
       email,
+      coreIdentifier: email,
+      subjectType: 'customer',
+      emailIsVerified: true,
     })));
 
     const signing = `${header}.${payload}`;
