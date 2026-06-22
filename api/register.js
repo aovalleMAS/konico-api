@@ -5,13 +5,14 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-  const { first_name, last_name, email, phone, date_of_birth, line1, line2, city, state_region, postal_code } = req.body;
+  const { first_name, last_name, email, phone, date_of_birth, password, line1, line2, city, state_region, postal_code } = req.body;
   if (!first_name || !last_name || !email) return res.status(400).json({ error: 'Nombre, apellido y email son obligatorios' });
+  if (!password || password.length < 6) return res.status(400).json({ error: 'La contraseña debe tener al menos 6 caracteres' });
   const pool = getPool();
   try {
     const [uRes] = await pool.execute(
-      `INSERT INTO users (first_name, last_name, email, phone, date_of_birth) VALUES (?, ?, ?, ?, ?)`,
-      [first_name, last_name, email, phone || null, date_of_birth || null]
+      `INSERT INTO users (first_name, last_name, email, phone, date_of_birth, password) VALUES (?, ?, ?, ?, ?, ?)`,
+      [first_name, last_name, email, phone || null, date_of_birth || null, password]
     );
     const userId = uRes.insertId;
     if (line1) {
