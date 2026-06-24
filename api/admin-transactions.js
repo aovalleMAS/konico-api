@@ -10,11 +10,11 @@ export default async function handler(req, res) {
   const pool = getPool();
   try {
     const [rows] = await pool.execute(
-      `SELECT t.transaction_id, t.external_ref, t.amount_cents, t.currency,
+      `SELECT t.id AS transaction_id, t.external_ref, t.amount_cents, t.currency,
               t.status, t.description, t.transaction_at,
               u.user_id, u.first_name, u.last_name, u.email
        FROM transactions t
-       JOIN users u ON u.user_id = t.user_id
+       LEFT JOIN users u ON u.user_id = t.user_id
        ORDER BY t.transaction_at DESC`
     );
     return res.status(200).json({ transactions: rows });
