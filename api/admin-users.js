@@ -7,10 +7,6 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
-  if (req.headers['x-admin-key'] !== process.env.ADMIN_KEY) {
-    return res.status(401).json({ error: 'No autorizado' });
-  }
-
   const pool = getPool();
   try {
     const [rows] = await pool.execute(
