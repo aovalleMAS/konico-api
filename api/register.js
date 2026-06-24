@@ -32,7 +32,7 @@ export default async function handler(req, res) {
         `INSERT INTO user_consents (user_id, terms, marketing, analytics, consented_at)
          VALUES (?, ?, ?, ?, ?)
          ON DUPLICATE KEY UPDATE terms=VALUES(terms), marketing=VALUES(marketing), analytics=VALUES(analytics), consented_at=VALUES(consented_at)`,
-        [userId, consent.terms ? 1 : 0, consent.marketing ? 1 : 0, consent.analytics ? 1 : 0, consent.timestamp || new Date().toISOString()]
+        [userId, consent.terms ? 1 : 0, consent.marketing ? 1 : 0, consent.analytics ? 1 : 0, new Date(consent.timestamp || Date.now()).toISOString().slice(0,19).replace('T',' ')]
       );
     }
 
